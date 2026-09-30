@@ -10,9 +10,16 @@ const CACHE = 'timesfm-web-v1';
 async function fetchCached(url, onBytes) {
   let cache = null;
   try { cache = await caches.open(CACHE); const hit = await cache.match(url); if (hit) { const b = new Uint8Array(await hit.arrayBuffer()); onBytes(b.length, true); return b; } } catch (e) { cache = null; }
-  const r = await fetch(url); if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
-  const reader = r.body.getReader(); const chunks = []; let n = 0;
-  for (;;) { const { done, value } = await reader.read(); if (done) break; chunks.push(value); n += value.length; onBytes(value.length, false); }
+  let chunks, n;
+  for (let attempt = 0; ; attempt++) { // one retry on a dropped connection
+    chunks = []; n = 0;
+    try {
+      const r = await fetch(url); if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+      const reader = r.body.getReader();
+      for (;;) { const { done, value } = await reader.read(); if (done) break; chunks.push(value); n += value.length; onBytes(value.length, false); }
+      break;
+    } catch (e) { onBytes(-n, false); if (attempt >= 1) throw e; }
+  }
   const b = new Uint8Array(n); let o = 0; for (const c of chunks) { b.set(c, o); o += c.length; }
   if (cache) try { await cache.put(url, new Response(b)); } catch (e) { /* quota: skip caching */ }
   return b;
