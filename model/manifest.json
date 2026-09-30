@@ -1,0 +1,25 @@
+{
+ "model": "timesfm-2.5-200m-q8.onnx",
+ "model_bytes": 819699,
+ "data_name": "timesfm-2.5-200m-q8.onnx.data",
+ "data_parts": [
+  "timesfm-2.5-200m-q8.onnx.data.0",
+  "timesfm-2.5-200m-q8.onnx.data.1",
+  "timesfm-2.5-200m-q8.onnx.data.2"
+ ],
+ "data_bytes": 260500480,
+ "context": 512,
+ "horizon": 128,
+ "quantiles": [
+  0.1,
+  0.2,
+  0.3,
+  0.4,
+  0.5,
+  0.6,
+  0.7,
+  0.8,
+  0.9
+ ],
+ "sha256_data": "6eaf510182d2b9d611f7b561bbebdd5bea705999ba21030feef660ce44e29d02"
+}

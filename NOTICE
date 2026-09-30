@@ -1,0 +1,15 @@
+TimesFM 2.5 (200M) - browser/ONNX conversion
+
+The model weights in model/ are derived from google/timesfm-2.5-200m-pytorch
+(https://huggingface.co/google/timesfm-2.5-200m-pytorch), Copyright 2025 Google LLC,
+developed by Google Research (https://github.com/google-research/timesfm) and released
+under the Apache License, Version 2.0.
+
+Paper: Das, Kong, Sen, Zhou. "A decoder-only foundation model for time-series
+forecasting." ICML 2024. https://arxiv.org/abs/2310.10688
+
+Modifications: the PyTorch checkpoint was exported to ONNX (opset 17) as a single
+fixed-context (512) prefill pass and its MatMul weights were quantized to 8-bit
+(onnxruntime MatMulNBits, symmetric, block 32). The JavaScript pre/post-processing
+in timesfm.js re-implements the reference forecast() logic from the timesfm package
+(Apache-2.0). This is not an official Google product.
